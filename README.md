@@ -69,4 +69,4 @@ This is a simple prototype for educational purposes. Feel free to modify and ext
 ---
 
 ## Contact
-For questions or contributions, please contact: your.email@example.com
+For questions or contributions, please contact: jordanleturgez@gmail.com
