@@ -1,0 +1,43 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zombie Survival Game</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- User Authentication -->
+  <div id="auth-container">
+    <h2>Login to Play</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <button id="login-btn">Login</button>
+  </div>
+
+  <!-- Main Game Interface -->
+  <div id="game-container" style="display:none;">
+    <!-- HUD -->
+    <div id="hud">
+      <div id="health-bar">
+        <div id="health"></div>
+      </div>
+      <div id="ammo-display">Ammo: <span id="ammo-count">10</span></div>
+      <div id="score">Score: <span id="score-value">0</span></div>
+    </div>
+
+    <!-- Player & Zombies Canvas -->
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+
+    <!-- Weapon Selection -->
+    <div id="weapon-menu">
+      <button data-weapon="pistol">Pistol</button>
+      <button data-weapon="shotgun">Shotgun</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+
+</html>
