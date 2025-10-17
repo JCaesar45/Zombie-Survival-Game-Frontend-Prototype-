@@ -1,0 +1,127 @@
+// User Authentication
+const authContainer = document.getElementById("auth-container");
+const gameContainer = document.getElementById("game-container");
+const loginBtn = document.getElementById("login-btn");
+
+loginBtn.addEventListener("click", () => {
+  const username = document.getElementById("username").value;
+  if (username.trim() !== "") {
+    authContainer.style.display = "none";
+    gameContainer.style.display = "block";
+    initGame();
+  }
+});
+
+// Basic Game Setup
+function initGame() {
+  const canvas = document.getElementById("game-canvas");
+  const ctx = canvas.getContext("2d");
+
+  // Player properties
+  const player = {
+    x: 400,
+    y: 300,
+    width: 40,
+    height: 60,
+    color: "blue",
+    health: 100,
+    ammo: 10,
+    score: 0,
+    speed: 5,
+    weapon: "pistol"
+  };
+
+  // Zombies array
+  const zombies = [];
+
+  // Generate some zombies
+  for (let i = 0; i < 5; i++) {
+    zombies.push({
+      x: Math.random() * 780 + 10,
+      y: Math.random() * 580 + 10,
+      width: 30,
+      height: 50,
+      color: "green",
+      speed: 1 + Math.random() * 2
+    });
+  }
+
+  // Controls
+  const keys = {};
+  document.addEventListener("keydown", (e) => {
+    keys[e.key] = true;
+  });
+  document.addEventListener("keyup", (e) => {
+    keys[e.key] = false;
+  });
+
+  // Weapon selection
+  document.querySelectorAll("#weapon-menu button").forEach((btn) => {
+    btn.onclick = () => {
+      player.weapon = btn.dataset.weapon;
+    };
+  });
+
+  // Shooting
+  document.addEventListener("click", () => {
+    if (player.ammo > 0) {
+      player.ammo--;
+      // Check for zombie hit
+      zombies.forEach((z) => {
+        if (isColliding(player, z)) {
+          // Remove zombie and increase score
+          zombies.splice(zombies.indexOf(z), 1);
+          player.score += 10;
+        }
+      });
+    }
+  });
+
+  // Game Loop
+  function gameLoop() {
+    // Clear Canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Player movement
+    if (keys["ArrowUp"]) player.y -= player.speed;
+    if (keys["ArrowDown"]) player.y += player.speed;
+    if (keys["ArrowLeft"]) player.x -= player.speed;
+    if (keys["ArrowRight"]) player.x += player.speed;
+
+    // Draw Player
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+
+    // Draw Zombies
+    zombies.forEach((z) => {
+      // Zombie AI: move towards player
+      const dx = player.x - z.x;
+      const dy = player.y - z.y;
+      const dist = Math.hypot(dx, dy);
+      z.x += (dx / dist) * z.speed;
+      z.y += (dy / dist) * z.speed;
+
+      ctx.fillStyle = z.color;
+      ctx.fillRect(z.x, z.y, z.width, z.height);
+    });
+
+    // Update HUD
+    document.getElementById("health").style.width = player.health + "%";
+    document.getElementById("ammo-count").textContent = player.ammo;
+    document.getElementById("score-value").textContent = player.score;
+
+    requestAnimationFrame(gameLoop);
+  }
+
+  // Collision detection
+  function isColliding(rect1, rect2) {
+    return (
+      rect1.x < rect2.x + rect2.width &&
+      rect1.x + rect1.width > rect2.x &&
+      rect1.y < rect2.y + rect2.height &&
+      rect1.y + rect1.height > rect2.y
+    );
+  }
+
+  gameLoop();
+}
